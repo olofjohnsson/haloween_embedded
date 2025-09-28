@@ -9,4 +9,7 @@ This sequence repeats with each spider until the visitors reach a PIR sensor, wh
   <img src="./images/overview.png" alt="Overview of the Halloween Expo" width="500"/>
 </p>
 
+# Build
+Add build configuration for the nRF52840dk_nrf52840 and use the overlay promicro_nrf52840_ghostzipline.overlay
+
 
