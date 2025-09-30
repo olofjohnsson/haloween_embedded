@@ -19,49 +19,49 @@
 	};
   gate_1: gate-1 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 1 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 6 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   gate_2: gate-2 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 2 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 8 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   sw_1: sw-1 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 3 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 31 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   sw_2: sw-2 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 4 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 29 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   pir_1: pir-1 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 5 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 2 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   sw_pwr_1: sw-pwr-1 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 6 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio1 15 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
 	button_1: button-1 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 7 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 17 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
 
 	sw_mp3: sw-mp3 {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 8 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 20 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
 
 	sw_light: sw-light {
     compatible = "nordic,gpio-pins";
-    gpios = <&gpio0 9 (GPIO_ACTIVE_LOW)>;
+    gpios = <&gpio0 22 (GPIO_ACTIVE_LOW)>;
     status = "okay";
   };
   aliases {
@@ -79,4 +79,11 @@
 
 &gpiote {
 	status = "okay";
+};
+&nfct {
+  status = "okay";
+};
+
+&uart0 {
+  status = "okay";
 };
