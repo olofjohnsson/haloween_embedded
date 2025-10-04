@@ -6,6 +6,9 @@
 #include <zephyr/settings/settings.h>
 #include <bluetooth/services/lbs.h>
 #include <hal/nrf_power.h>
+#include <zephyr/logging/log.h>
+
+LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
 typedef enum {
     CW,
@@ -145,33 +148,42 @@ void init_pins()
 
 void run_application()
 {
-    init_pins();
+  LOG_DBG("Run application");
+  k_msleep(1000);
+  LOG_DBG("Init pins");
+  k_msleep(1000);
+  init_pins();
+  k_msleep(1000);
+  LOG_DBG("Init ble");
+  k_msleep(1000);
+  bluetooth_init();
+  k_msleep(1000);
+  LOG_DBG("Start adv");
+  k_msleep(1000);
+  bluetooth_start_advertising();
+  k_msleep(1000);
 
-    bluetooth_init();
+  gpio_pin_set_dt(&led, 1);
 
-    bluetooth_start_advertising();
+  while (1) 
+  {
+      if(pir_motion == MOTION_DETECTED)
+      {
+          mp3_on();
+          light_on();
+          run_zipline(CW);
+          pir_motion = NO_MOTION_DETECTED;
+      }
 
-    gpio_pin_set_dt(&led, 1);
-
-    while (1) 
-    {
-        if(pir_motion == MOTION_DETECTED)
-        {
-            mp3_on();
-            light_on();
-            run_zipline(CW);
-            pir_motion = NO_MOTION_DETECTED;
-        }
-
-        if(motor == MOTOR_REWIND)
-        {
-            k_msleep(2000);
-            light_off();
-            k_msleep(10000);
-            run_zipline(CCW);
-            
-        }
-        k_msleep(1000);
-    }
+      if(motor == MOTOR_REWIND)
+      {
+          k_msleep(2000);
+          light_off();
+          k_msleep(10000);
+          run_zipline(CCW);
+          
+      }
+      k_msleep(1000);
+  }
 }
     

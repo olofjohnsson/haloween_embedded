@@ -68,7 +68,6 @@
     redled = &led_red;
   };
 };
-
 &gpio0 {
 	status = "okay";
 };
@@ -85,5 +84,10 @@
 };
 
 &uart0 {
-  status = "okay";
+  status = "disabled";
 };
+
+&mx25r64 {
+  status = "disabled";
+};
+

@@ -1,76 +1,87 @@
 #include "dfplayer.h"
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(dfplayer, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(dfplayer, LOG_LEVEL_DBG);
 
-#define UART_LABEL DT_LABEL(DT_NODELABEL(uart1))
+#define RECEIVE_BUFF_SIZE 10
+#define RECEIVE_TIMEOUT 100
 
-static const struct device *uart_dev;
+const struct device *uart= DEVICE_DT_GET(DT_NODELABEL(uart1));
 
 static const uint8_t DFPLAYER_START_BYTE     = 0x7E;
 static const uint8_t DFPLAYER_VERSION        = 0xFF;
 static const uint8_t DFPLAYER_COMMAND_LENGTH = 0x06;
 static const uint8_t DFPLAYER_END_BYTE       = 0xEF;
 
-static void dfplayer_send_raw(dfplayer_message_t *msg)
+static uint8_t rx_buf[RECEIVE_BUFF_SIZE] = {0};
+
+static void uart_cb(const struct device *dev, struct uart_event *evt, void *user_data)
 {
-    if (!msg) {
-        LOG_ERR("Invalid DFPlayer message");
-        return;
-    }
+  
+	switch (evt->type) {
 
-    dfplayer_raw_message_t raw_msg;
-    raw_msg.start_byte    = DFPLAYER_START_BYTE;
-    raw_msg.version       = DFPLAYER_VERSION;
-    raw_msg.length        = DFPLAYER_COMMAND_LENGTH;
-    raw_msg.command_code  = msg->command_code;
-    raw_msg.feedback      = 0x00;
-    raw_msg.param_high    = (msg->parameter >> 8) & 0xFF;
-    raw_msg.param_low     = msg->parameter & 0xFF;
+	case UART_RX_RDY:
+    LOG_DBG("Something coming in on the UART receiver");
+		if ((evt->data.rx.len) == 1) {
+			if (evt->data.rx.buf[evt->data.rx.offset] == '1') {
+				LOG_DBG("Received, 1");
+			} else if (evt->data.rx.buf[evt->data.rx.offset] == '2') {
+				LOG_DBG("Received, 1");
+			} else if (evt->data.rx.buf[evt->data.rx.offset] == '3') {
+				LOG_DBG("Received, 1");
+			}
+		}
+		break;
+	case UART_RX_DISABLED:
+		uart_rx_enable(dev, rx_buf, sizeof rx_buf, RECEIVE_TIMEOUT);
+		break;
 
-    uint16_t checksum = -(DFPLAYER_VERSION + DFPLAYER_COMMAND_LENGTH +
-                          raw_msg.command_code + raw_msg.feedback +
-                          raw_msg.param_high + raw_msg.param_low);
-
-    raw_msg.checksum_high = (checksum >> 8) & 0xFF;
-    raw_msg.checksum_low  = checksum & 0xFF;
-    raw_msg.end_byte      = DFPLAYER_END_BYTE;
-
-    uint8_t *bytes = (uint8_t *)&raw_msg;
-    for (int i = 0; i < sizeof(dfplayer_raw_message_t); i++) {
-        uart_poll_out(uart_dev, bytes[i]);
-    }
-
-    LOG_INF("DFPlayer command sent: code=0x%02X param=%u",
-            raw_msg.command_code, msg->parameter);
+	default:
+		break;
+	}
 }
 
 int dfplayer_init(void)
 {
-    uart_dev = device_get_binding(UART_LABEL);
-    if (!uart_dev) {
-        LOG_ERR("UART device %s not found", UART_LABEL);
-        return -ENODEV;
-    }
-    LOG_INF("DFPlayer UART initialized");
-    return 0;
-}
-
-int dfplayer_send_message(dfplayer_message_t *msg)
-{
-    if (!msg) {
-        return -EINVAL;
-    }
-    dfplayer_send_raw(msg);
-    return 0;
+  int err;
+  if (!device_is_ready(uart))
+  {
+    printk("UART device not ready\r\n");
+    return -1;
+	}
+  err = uart_callback_set(uart, uart_cb, NULL);
+  if (err)
+  {
+    return err;
+  }
+  LOG_INF("DFPlayer UART initialized");
+  return 0;
 }
 
 int df_play_track(uint16_t track)
 {
-    dfplayer_message_t msg = {
-        .command_code = 0x03,
-        .parameter    = track
-    };
-    return dfplayer_send_message(&msg);
+  int err;
+  LOG_DBG("Selected track: %d", track);
+  dfplayer_raw_message_t msg = {
+    .start_byte    = 0x7E,  // Example values
+    .version       = 0xFF,
+    .length        = 0x06,
+    .command_code  = 0x03,
+    .feedback      = 0x01,
+    .param_high    = 0x00,
+    .param_low     = 0x01,
+    .checksum_high = 0xFE,
+    .checksum_low  = 0xF7,
+    .end_byte      = 0xEF,
+  };
+  err = uart_tx(uart, (uint8_t *)&msg, sizeof(msg), SYS_FOREVER_MS);
+  if (err)
+  {
+    LOG_DBG("Failed when calling uart_tx");
+    return err;
+  }
+  return 0;
 }

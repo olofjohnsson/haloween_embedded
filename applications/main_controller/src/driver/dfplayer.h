@@ -27,7 +27,6 @@ typedef struct {
 } dfplayer_message_t;
 
 int dfplayer_init(void);
-int dfplayer_send_message(dfplayer_message_t *msg);
 int df_play_track(uint16_t track);
 
 #ifdef __cplusplus
