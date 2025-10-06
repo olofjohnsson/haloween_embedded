@@ -3,7 +3,10 @@
 #include "application/application.h"
 #include <zephyr/logging/log.h>
 
+LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
+
 int main(void)
 {
+	LOG_DBG("Run application");
 	run_application();
 }
