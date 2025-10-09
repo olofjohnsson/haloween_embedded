@@ -15,7 +15,8 @@
 			"${workspaceFolder}\\applications\\nordic\\lbs"
 		],
 		"files.associations": {
-			"printk.h": "c"
+			"printk.h": "c",
+			"gpio.h": "c"
 		}
 	}
 }

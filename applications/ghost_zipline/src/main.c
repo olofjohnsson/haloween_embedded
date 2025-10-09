@@ -7,6 +7,6 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 int main(void)
 {
-	LOG_DBG("Run application");
+	LOG_DBG("Main");
 	run_application();
 }
