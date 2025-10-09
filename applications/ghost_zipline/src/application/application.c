@@ -118,21 +118,20 @@ void init_pins()
     LOG_DBG("led set to output");
     gpio_pin_configure_dt(&gate_pin_1, GPIO_OUTPUT_INACTIVE);
     LOG_DBG("gate_1");
-    // gpio_pin_configure_dt(&gate_pin_2, GPIO_OUTPUT_INACTIVE);
-    // LOG_DBG("gate_2");
-    // gpio_pin_configure_dt(&sw_pin_light, GPIO_OUTPUT_INACTIVE);
-    // LOG_DBG("light");
-    // gpio_pin_configure_dt(&sw_pin_mp3, GPIO_OUTPUT_ACTIVE);
-    // LOG_DBG("mp3");
-    //gpio_pin_configure_dt(&sw_pwr_1, GPIO_OUTPUT_ACTIVE);
+    gpio_pin_configure_dt(&gate_pin_2, GPIO_OUTPUT_INACTIVE);
+    LOG_DBG("gate_2");
+    gpio_pin_configure_dt(&sw_pin_light, GPIO_OUTPUT_INACTIVE);
+    LOG_DBG("light");
+    gpio_pin_configure_dt(&sw_pin_mp3, GPIO_OUTPUT_ACTIVE);
+    LOG_DBG("mp3");
     gpio_pin_configure_dt(&sw_pin_1, GPIO_PULL_UP);
     LOG_DBG("sw1");
     gpio_pin_configure_dt(&sw_pin_2, GPIO_PULL_UP);
     LOG_DBG("sw2");
     gpio_pin_configure_dt(&pir_pin_1, GPIO_PULL_DOWN);
     LOG_DBG("pir1");
-    // gpio_pin_configure_dt(&button_1, GPIO_PULL_UP);
-    // LOG_DBG("button1");
+    gpio_pin_configure_dt(&button_1, GPIO_PULL_UP);
+    LOG_DBG("button1");
     LOG_DBG("Pins are now configured");
 
     /* Configure sw_pin_1 as interrupt on falling edge */

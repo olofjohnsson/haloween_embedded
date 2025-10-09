@@ -91,3 +91,26 @@
   status = "disabled";
 };
 
+&spi0 {
+  status = "disabled";
+};
+
+&spi1 {
+  status = "disabled";
+};
+
+&spi2 {
+  status = "disabled";
+};
+
+&spi3 {
+  status = "disabled";
+};
+
+&led2 {
+  status = "disabled";
+};
+
+&qspi {
+  status = "disabled";
+};
