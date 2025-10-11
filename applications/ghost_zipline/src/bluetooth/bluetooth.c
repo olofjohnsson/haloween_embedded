@@ -27,9 +27,11 @@
 
 #include <zephyr/logging/log.h>
 
+#include <app_version.h>
+
 LOG_MODULE_REGISTER(ble, LOG_LEVEL_DBG);
 
-#define DEVICE_NAME             CONFIG_BT_DEVICE_NAME
+#define DEVICE_NAME             CONFIG_APPLICATION_NAME " " APP_VERSION_STRING
 #define DEVICE_NAME_LEN         (sizeof(DEVICE_NAME) - 1)
 
 #define RUN_LED_BLINK_INTERVAL  1000
