@@ -113,52 +113,30 @@ void pir_activated(const struct device *dev, struct gpio_callback *cb, uint32_t 
 
 void init_pins()
 {
-    LOG_DBG("inside init_pins");
     gpio_pin_configure_dt(&led, GPIO_OUTPUT_INACTIVE);
-    LOG_DBG("led set to output");
     gpio_pin_configure_dt(&gate_pin_1, GPIO_OUTPUT_INACTIVE);
-    LOG_DBG("gate_1");
     gpio_pin_configure_dt(&gate_pin_2, GPIO_OUTPUT_INACTIVE);
-    LOG_DBG("gate_2");
     gpio_pin_configure_dt(&sw_pin_light, GPIO_OUTPUT_INACTIVE);
-    LOG_DBG("light");
     gpio_pin_configure_dt(&sw_pin_mp3, GPIO_OUTPUT_ACTIVE);
-    LOG_DBG("mp3");
     gpio_pin_configure_dt(&sw_pin_1, GPIO_PULL_UP);
-    LOG_DBG("sw1");
     gpio_pin_configure_dt(&sw_pin_2, GPIO_PULL_UP);
-    LOG_DBG("sw2");
     gpio_pin_configure_dt(&pir_pin_1, GPIO_PULL_DOWN);
-    LOG_DBG("pir1");
     gpio_pin_configure_dt(&button_1, GPIO_PULL_UP);
-    LOG_DBG("button1");
-    LOG_DBG("Pins are now configured");
 
-    /* Configure sw_pin_1 as interrupt on falling edge */
+    /* Configure interrupt pins */
     gpio_pin_interrupt_configure_dt(&sw_pin_1, GPIO_INT_EDGE_FALLING);
-    LOG_DBG("Interrupt configured");
+    gpio_pin_interrupt_configure_dt(&sw_pin_2, GPIO_INT_EDGE_FALLING);
+    gpio_pin_interrupt_configure_dt(&pir_pin_1, GPIO_INT_EDGE_RISING);
 
     /* Initialize GPIO callback */
     gpio_init_callback(&sw_1_cb_data, sw_1_activated, BIT(sw_pin_1.pin));
-    gpio_add_callback(sw_pin_1.port, &sw_1_cb_data);
-    LOG_DBG("Callbacks initialized and added");
-    /* Configure sw_pin_2 as interrupt on falling edge */
-    gpio_pin_interrupt_configure_dt(&sw_pin_2, GPIO_INT_EDGE_FALLING);
-
-    /* Initialize GPIO callback */
     gpio_init_callback(&sw_2_cb_data, sw_2_activated, BIT(sw_pin_2.pin));
-    gpio_add_callback(sw_pin_2.port, &sw_2_cb_data);
-    LOG_DBG("Callbacks initialized and added");
-    
-
-    /* Configure sw_pin_1 as interrupt*/
-    gpio_pin_interrupt_configure_dt(&pir_pin_1, GPIO_INT_EDGE_RISING);
-    LOG_DBG("Interrupt configured");
-
-    /* Initialize GPIO callback */
     gpio_init_callback(&pir_1_cb_data, pir_activated, BIT(pir_pin_1.pin));
+    
+    /* Add callbacks */
+    gpio_add_callback(sw_pin_1.port, &sw_1_cb_data);
+    gpio_add_callback(sw_pin_2.port, &sw_2_cb_data);
     gpio_add_callback(pir_pin_1.port, &pir_1_cb_data);
-    LOG_DBG("Callbacks initialized and added");
 }
 
 void run_application()
@@ -166,32 +144,30 @@ void run_application()
   LOG_DBG("Run application");
   LOG_DBG("Init pins");
   init_pins();
-  LOG_DBG("Init ble");
   bluetooth_init();
-  LOG_DBG("Start adv");
   bluetooth_start_advertising();
-
   gpio_pin_set_dt(&led, 1);
 
   while (1) 
   {
-      if(pir_motion == MOTION_DETECTED)
-      {
-          mp3_on();
-          light_on();
-          run_zipline(CW);
-          pir_motion = NO_MOTION_DETECTED;
-      }
+    gpio_pin_toggle_dt(&gate_pin_1);
+    if(pir_motion == MOTION_DETECTED)
+    {
+      LOG_DBG("Motion detected!");
+      mp3_on();
+      light_on();
+      run_zipline(CW);
+      pir_motion = NO_MOTION_DETECTED;
+    }
 
-      if(motor == MOTOR_REWIND)
-      {
-          k_msleep(2000);
-          light_off();
-          k_msleep(10000);
-          run_zipline(CCW);
-          
-      }
-      k_msleep(1000);
+    if(motor == MOTOR_REWIND)
+    {
+      k_msleep(2000);
+      light_off();
+      k_msleep(10000);
+      run_zipline(CCW);
+    }
+    k_msleep(1000);
   }
 }
     
