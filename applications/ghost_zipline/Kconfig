@@ -1,0 +1,12 @@
+# Include Zephyr's base Kconfig
+source "$ZEPHYR_BASE/Kconfig.zephyr"
+
+menu "Custom Application Options"
+
+config APPLICATION_NAME
+    string "Advertised name"
+    default "Ghost zipline"
+    help
+      Name seen during BLE advertisement
+
+endmenu
