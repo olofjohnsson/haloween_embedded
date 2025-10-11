@@ -7,4 +7,5 @@ target_sources(app PRIVATE
 src/main.c
 src/application/application.c
 src/bluetooth/bluetooth.c
+src/hardware/vdd_level.c
 )
