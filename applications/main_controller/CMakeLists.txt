@@ -5,5 +5,6 @@ project(main_controller)
 
 target_sources(app PRIVATE
 src/main.c
+src/hardware/vdd_level.c
 src/driver/dfplayer.c
 )

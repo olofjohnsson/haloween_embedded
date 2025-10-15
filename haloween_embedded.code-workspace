@@ -7,7 +7,9 @@
 	"settings": {
 		"nrf-connect.applications": [
 			"${workspaceFolder}\\applications\\ghost_zipline",
-			"${workspaceFolder}\\applications\\main_controller"
+			"${workspaceFolder}\\applications\\main_controller",
+			"${workspaceFolder}/applications/main_controller",
+			"${workspaceFolder}/applications/ghost_zipline"
 		],
 		"files.associations": {
 			"printk.h": "c",
