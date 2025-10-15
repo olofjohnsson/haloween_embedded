@@ -1,6 +1,6 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-#include "driver/dfplayer.h"
+//#include "driver/dfplayer.h"
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
@@ -9,7 +9,7 @@ int main(void)
   int err;
   LOG_DBG("Starting application in main controller");
   LOG_DBG("Init dfplayer");
-  err = dfplayer_init();
+  //err = dfplayer_init();
   if (err)
   {
     LOG_ERR("Failure during init if dfplayer");
@@ -18,7 +18,7 @@ int main(void)
   {
     LOG_DBG("Inside main loop...");
     LOG_DBG("Play track");
-    df_play_track(1);
+    //df_play_track(1);
     k_msleep(1000);
 
   }
