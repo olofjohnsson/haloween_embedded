@@ -13,4 +13,8 @@ This sequence repeats with each spider until the visitors reach a PIR sensor, wh
 NCS 3.1.0 in vscode.
 Add build configuration for the nRF52840dk_nrf52840 and use the overlay promicro_nrf52840_ghostzipline.overlay
 
+# MP3 files
+For the ghost zip line, the mp3 file(s) can be found on the SD-card. Backup is kept: \\nasen\music\halloween\ghost-zip-line
+For the main controller, the mp3 files can be found on the SD-card. Backup is kept: \\nasen\music\halloween\main-controller\mp3
+
 
