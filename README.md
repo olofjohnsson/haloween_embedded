@@ -9,6 +9,11 @@ This sequence repeats with each spider until the visitors reach a PIR sensor, wh
   <img src="./images/overview.png" alt="Overview of the Halloween Expo" width="500"/>
 </p>
 
+## Main controller overview
+<p align="center">
+  <img src="./images/main_controller.png" alt="Overview of the Halloween Expo" width="500"/>
+</p>
+
 # Build
 NCS 3.1.0 in vscode.
 Add build configuration for the nRF52840dk_nrf52840 and use the overlay promicro_nrf52840_ghostzipline.overlay
