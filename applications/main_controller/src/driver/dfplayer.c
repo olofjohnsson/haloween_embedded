@@ -11,6 +11,8 @@ LOG_MODULE_REGISTER(dfplayer, LOG_LEVEL_DBG);
 
 const struct device *uart = DEVICE_DT_GET(DT_NODELABEL(uart1));
 
+uint8_t send_buffer[DFPLAYER_SEND_LENGTH];
+
 static const uint8_t DFPLAYER_START_BYTE     = 0x7E;
 static const uint8_t DFPLAYER_VERSION        = 0xFF;
 static const uint8_t DFPLAYER_COMMAND_LENGTH = 0x06;
@@ -75,19 +77,51 @@ int dfplayer_init(void)
   //   return err;
   // }
   LOG_INF("DFPlayer UART initialized");
-  LOG_DBG("Sending string");
+  // LOG_DBG("Sending string");
   
-  err = uart_tx(uart, tx_buf, sizeof(tx_buf), SYS_FOREVER_US);
-  if (err)
-  {
-    LOG_DBG("Failed when sending string");
-    return err;
-  }
+  // err = uart_tx(uart, tx_buf, sizeof(tx_buf), SYS_FOREVER_US);
+  // if (err)
+  // {
+  //   LOG_DBG("Failed when sending string");
+  //   return err;
+  // }
   k_msleep(1000);
   return 0;
 }
 
-int df_play_track(uint16_t track)
+static uint16_t calculateCheckSum(uint8_t *buffer){
+  uint16_t sum = 0;
+  for (int i=Stack_Version; i<Stack_CheckSum; i++) {
+    sum += buffer[i];
+  }
+  return -sum;
+}
+
+static void uint16ToArray(uint16_t value, uint8_t *array){
+  *array = (uint8_t)(value>>8);
+  *(array+1) = (uint8_t)(value);
+}
+
+static int sendStack(uint8_t command, uint16_t argument){
+  int err;
+  send_buffer[Stack_Command] = command;
+  uint16ToArray(argument, send_buffer+Stack_Parameter);
+  uint16ToArray(calculateCheckSum(send_buffer), send_buffer+Stack_CheckSum);
+  LOG_DBG("Track sent");
+  err = uart_tx(uart, send_buffer, sizeof(send_buffer), SYS_FOREVER_US);
+  if (err)
+  {
+    LOG_DBG("Failed when calling uart_tx. Err = %d", err);
+    return err;
+  }
+  return 0;
+}
+
+void dfplayer_play(int fileNumber){
+  sendStack(0x03, fileNumber);
+}
+
+int df_play_track_depr(uint16_t track)
 {
   int err;
   static uint8_t tx_buf[] = {"nRF Connect SDK Fundamentals \n\r"};

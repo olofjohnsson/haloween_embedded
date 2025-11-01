@@ -35,14 +35,14 @@ int main(void)
     LOG_ERR("Failure during initialization of dfplayer");
   }
   LOG_DBG("Play track 1");
-  df_play_track(1);
+  dfplayer_play(1);
   while (1)
   {
     err = gpio_pin_toggle_dt(&pin);
 		if (err < 0) {
 			return err;
 		}
-    df_play_track(1);
+    //dfplayer_play(1);
     k_msleep(2000);
 
   }

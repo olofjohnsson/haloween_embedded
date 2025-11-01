@@ -8,6 +8,17 @@
 extern "C" {
 #endif
 
+#define Stack_Header 0
+#define Stack_Version 1
+#define Stack_Length 2
+#define Stack_Command 3
+#define Stack_ACK 4
+#define Stack_Parameter 5
+#define Stack_CheckSum 7
+#define Stack_End 9
+
+#define DFPLAYER_SEND_LENGTH 10
+
 typedef struct {
     uint8_t start_byte;
     uint8_t version;
@@ -28,6 +39,19 @@ typedef struct {
 
 int dfplayer_init(void);
 int df_play_track(uint16_t track);
+/**
+ * @brief Plays a specific audio file on the DFPlayer Mini.
+ *
+ * This function sends a command to the DFPlayer Mini module to play
+ * the specified file number from the current storage device (e.g., SD card).
+ *
+ * @param fileNumber The number of the file to play (starting from 1).
+ *
+ * @note The file must be properly named and located according to the DFPlayer Mini
+ *       file naming conventions (e.g., "0001.mp3" for file number 1).
+ */
+void dfplayer_play(int fileNumber);
+
 
 #ifdef __cplusplus
 }
